@@ -18,14 +18,17 @@ from selenium.webdriver.common.keys import Keys
 import json
 import queue
 
-
+import threading
 
 
 #----------------------------------
 #global variables
+BROWSER_OPEN = False
 driver = None 
-ser = serial.Serial('COM11', 9600)
-
+#ser = serial.Serial('COM11', 9600)
+ser = None
+THREADS = []
+CONTAINER = ""
 #----------------------------------
 #intialize speech sythensizer
 engine = pyttsx3.init()
@@ -33,6 +36,37 @@ rate = engine.getProperty('rate')
 engine.setProperty('rate', rate+100)
 #----------------------------------
 cache = []
+
+def track_webbrowser():
+    global BROWSER_OPEN
+    current_website = None
+    while(True):
+        if (driver == None):
+            BROWSER_OPEN = False
+        try:
+
+            if (driver.current_url !=  current_website and BROWSER_OPEN == True):
+                current_website = driver.current_url
+
+                
+                #----------------------------------
+                #open url connection and read html 
+                uClient = urlopen((str)(current_website))
+                page_html = uClient.read()
+                uClient.close()
+                
+                #activate html parse tool and parse main body of website
+                page_soup = soup(page_html, "html.parser")
+                CONTAINER = page_soup.find('body')
+                    
+            
+        except:
+            BROWSER_OPEN = False
+           
+
+
+def browser_nav():
+    print(CONTAINER)
 
 
 def send_data(ser, first, second):
@@ -80,6 +114,7 @@ def on_triggered():
     global test
     global driver
     global engine
+    global BROWSER_OPEN
 
     print("short cut pressed")
     engine.say('Short Cut pressed. Opening new Webrowser')
@@ -91,6 +126,7 @@ def on_triggered():
     engine.runAndWait()
     driver_.get("https://www.google.com/")
     driver = driver_
+    BROWSER_OPEN = True
 
     
 #Start reading the information on the website and send it to the arduino
@@ -119,6 +155,7 @@ def on_triggered_read():
     print("type y or n")
     flag  = True
     while (flag):
+
         if keyboard.is_pressed('y'):
             flag = False
             custom = True
@@ -223,22 +260,29 @@ if __name__ == "__main__":
     btn.grid(column=1, row=0)
    
     #----------------------------------
-
-  
+    #start thread to track web browser
+    t = threading.Thread(target =track_webbrowser)
+    THREADS.append(t)
+   
+    
    
     #----------------------------------
     #intialize shortcut 
     shortcut1 = 'alt+o' #define your hot-key
     shortcut2 = 'alt+v'
     shortcut3 = 'alt+m'
+    shortcut4 = 'tab'
    
     print('Hotkey set as:', shortcut1)
 
     keyboard.add_hotkey(shortcut1, on_triggered) #<-- attach the function to hot-key
     keyboard.add_hotkey(shortcut2, on_triggered_read) #<-- attach the function to hot-key
     keyboard.add_hotkey(shortcut3, test) #this is just a test shortcut
+    keyboard.add_hotkey(shortcut4, browser_nav ) #this allows navigation on a web browser
     #----------------------------------
     
+    for i in THREADS:
+        t.start()
 
     print("Press ESC to stop.")
 
