@@ -20,7 +20,13 @@ import queue
 
 import threading
 
+from  gtts import gTTS
+from pygame import mixer
 
+from tempfile import TemporaryFile
+
+
+from parse_website import get_headers
 #----------------------------------
 #global variables
 BROWSER_OPEN = False
@@ -29,6 +35,11 @@ driver = None
 ser = None
 THREADS = []
 CONTAINER = ""
+SPEAK = ""
+TEMP_SPEAK = ""
+NAV_ID = 0
+NAV = ["", "headers", "links", "title", "body", "inputs"]
+
 #----------------------------------
 #intialize speech sythensizer
 engine = pyttsx3.init()
@@ -39,13 +50,14 @@ cache = []
 
 def track_webbrowser():
     global BROWSER_OPEN
+    global CONTAINER
     current_website = None
     while(True):
         if (driver == None):
             BROWSER_OPEN = False
         try:
 
-            if (driver.current_url !=  current_website and BROWSER_OPEN == True):
+            if (driver.current_url !=  current_website or BROWSER_OPEN == True):
                 current_website = driver.current_url
 
                 
@@ -66,14 +78,23 @@ def track_webbrowser():
 
 
 def browser_nav():
+    global CONTAINER
+    global SPEAK
+    global engine
+
+    page_soup = soup(CONTAINER, "html.parser")
     print(CONTAINER)
+
+    get_headers(page_soup)
+    engine.stop()
+    #print(CONTAINER)
 
 
 def send_data(ser, first, second):
     arduino(ser, first)
     time.sleep(1)
     column_count = second
-    ser.write(bytes([column_count]))
+    ser.write(bytes([column_count]))    
     print (ser.readline()) # Read the newest output from the Arduino
     cache.append(first)
 
@@ -88,9 +109,19 @@ def clear_cache (ser):
         column_count = column_count + 1
 
     cache = []
+
 def get_2s_complement(data):
     result = - data
     return (bin(result))
+
+
+def voice():
+    global TEMP_SPEAK
+    global SPEAK
+    
+    TEMP_SPEAK = SPEAK
+    engine.say(SPEAK)
+    engine.runAndWait()
 
 #arduino communication via serial
 def arduino(ser, character):
@@ -242,10 +273,19 @@ def on_triggered_read():
            
         
 #this is a test function for shortcut    
-def test():
-    print("test")
+def navigation():
+    global NAV_ID
+    global NAV 
+    global engine
 
-    
+    engine.stop()
+    engine.say(NAV[NAV_ID])
+    engine.runAndWait()
+
+    if (NAV_ID == len(NAV) -1):
+        NAV_ID = 0
+    else:
+        NAV_ID += 1    
 
 #main function
 if __name__ == "__main__":
@@ -263,26 +303,25 @@ if __name__ == "__main__":
     #start thread to track web browser
     t = threading.Thread(target =track_webbrowser)
     THREADS.append(t)
-   
-    
-   
+
     #----------------------------------
     #intialize shortcut 
-    shortcut1 = 'alt+o' #define your hot-key
-    shortcut2 = 'alt+v'
-    shortcut3 = 'alt+m'
-    shortcut4 = 'tab'
+    shortcut1 = 'alt+o' #open browser
+    shortcut2 = 'alt+v' #open screen reader
+    shortcut3 = 'alt+m' #
+    shortcut4 = 'alt+n'
    
     print('Hotkey set as:', shortcut1)
 
     keyboard.add_hotkey(shortcut1, on_triggered) #<-- attach the function to hot-key
     keyboard.add_hotkey(shortcut2, on_triggered_read) #<-- attach the function to hot-key
-    keyboard.add_hotkey(shortcut3, test) #this is just a test shortcut
+    keyboard.add_hotkey(shortcut3, navigation) #this is just a test shortcut
     keyboard.add_hotkey(shortcut4, browser_nav ) #this allows navigation on a web browser
     #----------------------------------
     
     for i in THREADS:
         t.start()
+    
 
     print("Press ESC to stop.")
 
