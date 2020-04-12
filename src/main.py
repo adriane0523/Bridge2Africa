@@ -15,7 +15,7 @@ from urllib.request import Request, urlopen
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
-import json
+
 import queue
 
 import threading
@@ -27,6 +27,10 @@ from tempfile import TemporaryFile
 
 
 from parse_website import get_headers
+from util import *
+from driver import *
+
+import sys
 #----------------------------------
 #global variables
 BROWSER_OPEN = False
@@ -38,7 +42,8 @@ CONTAINER = ""
 SPEAK = ""
 TEMP_SPEAK = ""
 NAV_ID = 0
-NAV = ["", "headers", "links", "title", "body", "inputs"]
+NAV = ["","headers", "links", "title", "body", "inputs"]
+NAV_NODE = 0
 
 #----------------------------------
 #intialize speech sythensizer
@@ -69,7 +74,7 @@ def track_webbrowser():
                 
                 #activate html parse tool and parse main body of website
                 page_soup = soup(page_html, "html.parser")
-                CONTAINER = page_soup.find('body')
+                CONTAINER = page_soup
                     
             
         except:
@@ -81,63 +86,34 @@ def browser_nav():
     global CONTAINER
     global SPEAK
     global engine
+    global NAV
+    global NAV_ID
+    global NAV_NODE
+    #print(CONTAINER)
+   
+    
 
-    page_soup = soup(CONTAINER, "html.parser")
-    print(CONTAINER)
-
-    get_headers(page_soup)
+    print( NAV[NAV_ID])
     engine.stop()
+    result = get_headers(CONTAINER, NAV[NAV_ID])
+    engine.say(result[NAV_NODE])
+    engine.runAndWait()
+
+
+    NAV_NODE +=1
+
+    if (NAV_NODE == len(result)-1):
+        NAV_NODE = 0
+    else:
+        NAV_NODE += 1
+    
+
+  
     #print(CONTAINER)
 
 
-def send_data(ser, first, second):
-    arduino(ser, first)
-    time.sleep(1)
-    column_count = second
-    ser.write(bytes([column_count]))    
-    print (ser.readline()) # Read the newest output from the Arduino
-    cache.append(first)
-
-def clear_cache (ser):
-    global cache
-    
-    column_count = 0
-    for i in range(len(cache)):
-        print("")
-        arduino(ser, cache[i])
-        arduino(ser, column_count)
-        column_count = column_count + 1
-
-    cache = []
-
-def get_2s_complement(data):
-    result = - data
-    return (bin(result))
 
 
-def voice():
-    global TEMP_SPEAK
-    global SPEAK
-    
-    TEMP_SPEAK = SPEAK
-    engine.say(SPEAK)
-    engine.runAndWait()
-
-#arduino communication via serial
-def arduino(ser, character):
-   
-    #ser.write(str.encode(character) )
-    ser.write(chr(character).encode())
-    print (ser.readline()) # Read the newest output from the Arduino
-    
-#read .json files
-def read_json():
-    
-    with open('data.json',"r") as json_file:
-        data = json.load(json_file)
-        return data
-
-    return None
 
 #on shortcut trigger
 #open chrome driver and go to google.com
@@ -277,16 +253,27 @@ def navigation():
     global NAV_ID
     global NAV 
     global engine
+    global NAV_NODE
 
     engine.stop()
-    engine.say(NAV[NAV_ID])
-    engine.runAndWait()
-
-    if (NAV_ID == len(NAV) -1):
+   
+    
+    NAV_NODE = 0
+    if (NAV_ID == len(NAV)-1):
         NAV_ID = 0
     else:
-        NAV_ID += 1    
+        NAV_ID += 1
+        engine.say(NAV[NAV_ID])
+        engine.runAndWait()    
 
+def quit_program():
+    global THREADS
+    print("Quiting...")
+    sys.exit(0)
+    print("sleeping")
+    time.sleep(5)
+    
+    
 #main function
 if __name__ == "__main__":
     #----------------------------------
@@ -301,15 +288,17 @@ if __name__ == "__main__":
    
     #----------------------------------
     #start thread to track web browser
-    t = threading.Thread(target =track_webbrowser)
+    t = threading.Thread(target =track_webbrowser, daemon= True)
+    
     THREADS.append(t)
 
     #----------------------------------
     #intialize shortcut 
-    shortcut1 = 'alt+o' #open browser
-    shortcut2 = 'alt+v' #open screen reader
-    shortcut3 = 'alt+m' #
-    shortcut4 = 'alt+n'
+    shortcut1 = 'shift+alt+o' #open browser
+    shortcut2 = 'shift+alt+v' #open screen reader
+    shortcut3 = 'shift+alt+m' #
+    shortcut4 = 'shift+alt+n'
+    shortcut5 = 'shift+alt+q'
    
     print('Hotkey set as:', shortcut1)
 
@@ -317,10 +306,13 @@ if __name__ == "__main__":
     keyboard.add_hotkey(shortcut2, on_triggered_read) #<-- attach the function to hot-key
     keyboard.add_hotkey(shortcut3, navigation) #this is just a test shortcut
     keyboard.add_hotkey(shortcut4, browser_nav ) #this allows navigation on a web browser
+   
     #----------------------------------
     
     for i in THREADS:
-        t.start()
+        i.start()
+        i.join(0)
+      
     
 
     print("Press ESC to stop.")
