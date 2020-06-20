@@ -42,8 +42,9 @@ CONTAINER = ""
 SPEAK = ""
 TEMP_SPEAK = ""
 NAV_ID = 0
-NAV = ["","headers", "links", "title", "body", "inputs"]
+NAV = ["","headers", "links", "title", "body", "paragraph", "inputs"]
 NAV_NODE = 0
+CONTAINER_BRAILLE = ""
 
 #----------------------------------
 #intialize speech sythensizer
@@ -56,6 +57,7 @@ cache = []
 def track_webbrowser():
     global BROWSER_OPEN
     global CONTAINER
+    global NAV_NODE
     current_website = None
     while(True):
         if (driver == None):
@@ -75,6 +77,7 @@ def track_webbrowser():
                 #activate html parse tool and parse main body of website
                 page_soup = soup(page_html, "html.parser")
                 CONTAINER = page_soup
+                NAV_NODE = 0
                     
             
         except:
@@ -89,6 +92,7 @@ def browser_nav():
     global NAV
     global NAV_ID
     global NAV_NODE
+    global CONTAINER_BRAILLE
     #print(CONTAINER)
    
     
@@ -96,11 +100,13 @@ def browser_nav():
     print( NAV[NAV_ID])
     engine.stop()
     result = get_headers(CONTAINER, NAV[NAV_ID])
+
     engine.say(result[NAV_NODE])
+    CONTAINER_BRAILLE = result[NAV_NODE]
     engine.runAndWait()
 
 
-    NAV_NODE +=1
+  
 
     if (NAV_NODE == len(result)-1):
         NAV_NODE = 0
@@ -141,10 +147,11 @@ def on_triggered_read():
     #local variables/global variable references
     global ser
     global driver
+    global CONTAINER_BRAILLE
     print("short cut pressed")
     result = ""
 
-
+    engine.stop()
     #----------------------------------
     #open url connection and read html 
     uClient = urlopen((str)(driver.current_url))
@@ -155,6 +162,7 @@ def on_triggered_read():
     page_soup = soup(page_html, "html.parser")
     container = page_soup.find('body')
     #---------------------------------- 
+    comment_out  = '''
     custom = False
     engine.say('Custom passage read?    type y for yes or n for no')
     engine.runAndWait()
@@ -201,8 +209,10 @@ def on_triggered_read():
                 time.sleep (1)
             else:    
                 result = result + (str)(div.text)
-
+    
     result = result.strip(' \n\t')
+    '''
+    result = CONTAINER_BRAILLE
     print(result)
     result = result.lower()
     data = read_json()
@@ -223,7 +233,8 @@ def on_triggered_read():
             
             if x["letter"] == i:
                 print("CELL:",count)
-                send_data(ser, x["shift"], count)
+                print (x["shift"])
+                #send_data(ser, x["shift"], count)
                 time.sleep(1)
 
                 if (count == 9):
@@ -272,8 +283,14 @@ def quit_program():
     sys.exit(0)
     print("sleeping")
     time.sleep(5)
-    
-    
+
+def openSettings() : 
+    voiceSpeed = Label(window, text = "Adjust Voice Speed: ").grid(row = 1)
+    voiceSpeedAdjust = Entry()
+    voiceSpeedAdjust.grid(row = 1, column = 1)
+    browser = Button(window, text = "Open Browser").grid(row = 2)#add a function that opens the browser
+    screenRead = Button(window, text = "Start Screen Read").grid(row = 3) #add the function that starts screen read   
+
 #main function
 if __name__ == "__main__":
     #----------------------------------
@@ -282,10 +299,13 @@ if __name__ == "__main__":
     window.title("Bridge2Africa with EPICS")
     window.geometry('350x200')
     lbl = Label(window, text="Program is running")
-    lbl.grid(column=0, row=0)
-    btn = Button(window, text="settings")
-    btn.grid(column=1, row=0)
-   
+    lbl.grid(column=0, row=1)
+    settings = Button(window, text="settings", command = openSettings())
+    settings.grid(column=1, row=2)
+    exit_ = Button(window, text = "Exit", fg = 'red').grid(row = 0)
+
+
+ 
     #----------------------------------
     #start thread to track web browser
     t = threading.Thread(target =track_webbrowser, daemon= True)
@@ -294,11 +314,11 @@ if __name__ == "__main__":
 
     #----------------------------------
     #intialize shortcut 
-    shortcut1 = 'shift+alt+o' #open browser
-    shortcut2 = 'shift+alt+v' #open screen reader
-    shortcut3 = 'shift+alt+m' #
-    shortcut4 = 'shift+alt+n'
-    shortcut5 = 'shift+alt+q'
+    shortcut1 = 'z+o' #open browser
+    shortcut2 = 'z+v' #open screen reader
+    shortcut3 = 'z+m' #
+    shortcut4 = 'z+n'
+    shortcut5 = 'z+q'
    
     print('Hotkey set as:', shortcut1)
 

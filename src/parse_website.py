@@ -1,4 +1,4 @@
-
+from nltk.tokenize import sent_tokenize
 from bs4 import BeautifulSoup as soup
 import re
 
@@ -26,7 +26,15 @@ def get_headers(container, nav_type):
         body = container.find("body")
         the_contents_of_body_without_body_tags = body.findChildren(recursive=False)
         for i in the_contents_of_body_without_body_tags:
-            result.append(i)
+            result.append(i.get_text())
+
+    elif (nav_type == "paragraph"):
+        temp = ""
+        body = container.find("body")
+        for div in body.find_all('div'):
+            temp = temp + div.get_text()
+        print(temp)
+        result = sent_tokenize(temp)
 
     elif (nav_type == "input"):
         pass
