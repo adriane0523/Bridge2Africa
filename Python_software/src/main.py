@@ -38,7 +38,6 @@ if __name__ == "__main__":
     print('Hotkey set as:', shortcut4, "Speak")
     print('Hotkey set as:', shortcut5, "Describe Hierarchy")
     print('Hotkey set as:', shortcut6, "Turn on Arduino")
-  
 
     keyboard.add_hotkey(shortcut1, on_triggered_read) #braille read
     keyboard.add_hotkey(shortcut4, on_triggered_speak)  #speak

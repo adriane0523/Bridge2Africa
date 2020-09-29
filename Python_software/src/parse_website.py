@@ -5,6 +5,7 @@ import re
 def get_headers(container, nav_type):
     '''
     HTML parses all headers, page title, and paragraphs 
+    accepts the HTML from the page, and current navigation the user is on
     returns array of text corresponding to the navigation type (p, h, title)
     '''
     result = []
@@ -32,10 +33,9 @@ def get_headers(container, nav_type):
 def describe_hierarchy(container):
     '''
     HTML parses all headers, page title, and paragraphs 
+    accepts the HTML from the page
     return length of titles, headers and paragraphs, respectively
     '''
-
-
     result = [0,0,0]
     title = []
     header = []
@@ -44,10 +44,8 @@ def describe_hierarchy(container):
     for headlines in container.find_all(["h1", "h2", "h3", "h4", "h5" ]):
         header.append(headlines.get_text(strip=True))
 
-
     for i in container.find_all("title"):
         title.append(i.get_text(strip=True))
-
 
     for div in container.find_all('p'):
         paragraph.append(div.get_text(strip=True))

@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup as soup
 from urllib.request import Request, urlopen
 import pyttsx3
+from pyttsx3.drivers import sapi5
 import keyboard
 import time
 import serial
@@ -259,17 +260,10 @@ def on_triggered_read():
     result = result.lower()
     data = read_json()
     #----------------------------------
-    #goes to each letter references data.json and sends data arduino
-    #pause, quit, go are shortcuts to use when translation is happening
-
     engine.say('translating to braille')
     engine.runAndWait()
-
-
     webinfo_to_arduino( ser, engine, result, data, cache )
 
-
-        
 
 def navigation():
     '''
