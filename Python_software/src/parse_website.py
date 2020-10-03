@@ -30,6 +30,14 @@ def get_headers(container, nav_type):
     return result
 
 
+def get_links(container):
+    result = []
+    for link in soup.find_all('a', href=True):
+        print(link['href'])
+        result.append(link['href'])
+    
+    return result
+
 def describe_hierarchy(container):
     '''
     HTML parses all headers, page title, and paragraphs 

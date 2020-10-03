@@ -31,6 +31,7 @@ if __name__ == "__main__":
     shortcut4 = speak+'+down arrow' 
     shortcut5 = speak+'+up arrow'
     shortcut6 = misc+'+up arrow'
+    shortcut7 = speak + '+q'
  
     print('Hotkey set as:', shortcut1, "Braille Read")
     print('Hotkey set as:', shortcut2, "NAV: Title, Paragraph, header")
@@ -38,6 +39,8 @@ if __name__ == "__main__":
     print('Hotkey set as:', shortcut4, "Speak")
     print('Hotkey set as:', shortcut5, "Describe Hierarchy")
     print('Hotkey set as:', shortcut6, "Turn on Arduino")
+    print('Hotkey set as:', shortcut7, "Accessibility Software")
+    
 
     keyboard.add_hotkey(shortcut1, on_triggered_read) #braille read
     keyboard.add_hotkey(shortcut4, on_triggered_speak)  #speak
@@ -45,6 +48,7 @@ if __name__ == "__main__":
     keyboard.add_hotkey(shortcut2, navigation )  #title, headers, paragraph
     keyboard.add_hotkey(shortcut3, page_navigation) #page index
     keyboard.add_hotkey(shortcut6, intialize_arduino) #page index
+    keyboard.add_hotkey(shortcut7, intialize_arduino) #page index
     #----------------------------------
     
     for i in THREADS:

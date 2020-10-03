@@ -286,3 +286,14 @@ def navigation():
     
 
 
+def run_accessibility():
+    '''
+    run accessibility software
+    '''
+
+    global CONTAINER
+
+    links = get_links(CONTAINER)
+
+    print(links)
+
