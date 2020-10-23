@@ -13,8 +13,6 @@ from tkinter import *
 #The program may request to restart the program, so a prompt will be required
 window = Tk()
 
-
-
 def run_GUI():
     global window
     window.title("Bridge2Africa with EPICS")

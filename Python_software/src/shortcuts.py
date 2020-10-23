@@ -23,12 +23,14 @@ INDEX = 1
 TITLE = 0
 HEADER = 0
 P = 0
+LINKS = 0
 TITLE_INDEX = 0
 HEADER_INDEX = 0
 P_INDEX = 0
+LINKS_INDEX = 0
 CONTAINER = ""
 NAV_ID = 0
-NAV = ["headers", "title", "paragraph"]
+NAV = ["headers", "title", "paragraph", "links"]
 NAV_NODE = 0
 CONTAINER_BRAILLE = ""
 BROWSER_OPEN = False
@@ -47,7 +49,7 @@ def intialize_speech():
     global engine
     engine = pyttsx3.init()
     rate = engine.getProperty('rate')
-    engine.setProperty('rate', rate+500)
+    engine.setProperty('rate', rate+300)
 
 
 def intialize_arduino():
@@ -72,10 +74,12 @@ def track_webbrowser():
     global TITLE
     global HEADER
     global P
+    global LINKS
 
     global TITLE_INDEX
     global HEADER_INDEX
     global P_INDEX
+    global LINKS_INDEX
 
     current_website = None
 
@@ -100,16 +104,79 @@ def track_webbrowser():
                 TITLE = result[0]
                 HEADER = result[1]
                 P = result[2]
+                LINKS = result[3]
                                 
                 TITLE_INDEX = 0
                 HEADER_INDEX = 0
                 P_INDEX = 0
+                LINKS_INDEX = 0 
+                navigation()
+                page_navigation_add()
                                     
             
         except:
             pass
 
-def page_navigation():
+def page_navigation_minus():
+    '''
+    decrement index on the coressponding navigation setting
+    '''
+    global NAV_ID
+    global NAV 
+    global engine
+    global NAV_NODE
+
+    global TITLE_INDEX 
+    global HEADER_INDEX 
+    global P_INDEX 
+    global LINKS_INDEX
+
+    engine.stop()
+
+    if NAV_ID == 0:
+       
+        engine.say("Headers" + format(HEADER_INDEX - 1))
+        engine.runAndWait()    
+        
+        if ( HEADER_INDEX == 0):
+            HEADER_INDEX = 0
+        else:
+            HEADER_INDEX -= 1
+
+    elif NAV_ID == 1:
+
+        engine.say("Title" + format(TITLE_INDEX - 1))
+        engine.runAndWait()    
+        
+        if ( TITLE_INDEX == 0):
+            TITLE_INDEX = 0
+     
+        else:
+            TITLE_INDEX -= 1
+            
+    elif NAV_ID == 2:
+  
+        engine.say("Paragraph" + format(P_INDEX - 1))
+        engine.runAndWait()    
+         
+        if ( P_INDEX == 0 ):
+            P_INDEX = 0
+  
+        else:
+            P_INDEX -= 1
+
+    elif NAV_ID == 3:
+  
+        engine.say("Links" + format(LINKS_INDEX - 1))
+        engine.runAndWait()    
+        
+        if ( LINKS_INDEX  == 0 ):
+            LINKS_INDEX = 0
+        else:
+            LINKS_INDEX -= 1
+
+
+def page_navigation_add():
     '''
     Incrament index on the corresponding navgation setting
     '''
@@ -122,6 +189,7 @@ def page_navigation():
     global TITLE_INDEX 
     global HEADER_INDEX 
     global P_INDEX 
+    global LINKS_INDEX
 
     engine.stop()
 
@@ -154,6 +222,15 @@ def page_navigation():
             P_INDEX = 0
         else:
             P_INDEX += 1
+    elif NAV_ID == 3:
+  
+        engine.say("Links" + format(LINKS_INDEX + 1))
+        engine.runAndWait()    
+        
+        if ( (LINKS_INDEX + 1) == LINKS_INDEX):
+            LINKS_INDEX = 0
+        else:
+            LINKS_INDEX += 1
 
 
 def hierarchy():
@@ -164,10 +241,13 @@ def hierarchy():
     global TITLE
     global HEADER
     global P
+    global LINKS
 
     engine.stop()
     result = describe_hierarchy(CONTAINER)
-    prompt = "There are " + format(TITLE) + " Titles " + "There are " + format(HEADER) + " Headers " + " There are " + format(P) + " Paragraphs "
+    prompt = "There are " + format(TITLE) + " Titles " + "There are " + format(HEADER) + " Headers "  
+    prompt+=(" There are " + format(P) + " Paragraphs " + " There are " + format(LINKS) + " Links on this page")
+   
     engine.say(prompt)
     engine.runAndWait()
 
@@ -199,8 +279,9 @@ def return_prompt():
     global TITLE_INDEX 
     global HEADER_INDEX 
     global P_INDEX 
+    global LINKS_INDEX
     global CONTAINER
-    print(CONTAINER)
+
     result = get_headers(CONTAINER, NAV[NAV_ID])
     prompt = ""
     if NAV_ID == 0:
@@ -214,6 +295,10 @@ def return_prompt():
     elif NAV_ID == 2:
         print(result[P_INDEX])
         prompt = result[P_INDEX]
+    elif NAV_ID == 3:
+        print(result[P_INDEX])
+        prompt = result[LINKS_INDEX]
+
 
 
     return prompt
@@ -237,8 +322,8 @@ def on_triggered():
 
     engine.say('Current website google.com')
     engine.runAndWait()
-    #driver_.get("https://www.google.com/")
-    driver_.get("https://en.wikipedia.org/wiki/Arizona_State_University")
+    driver_.get("https://www.google.com/")
+    #driver_.get("https://en.wikipedia.org/wiki/Arizona_State_University")
     driver = driver_
     BROWSER_OPEN = True
 
@@ -291,9 +376,18 @@ def run_accessibility():
     run accessibility software
     '''
 
+
     global CONTAINER
 
     links = get_links(CONTAINER)
 
     print(links)
 
+def web_accessibility():
+    '''
+    run web accessibility
+    '''
+
+    prompt = " link 1 Medium link 2 Medium link 3 Medium link 4 Medium Link 5 Medium"
+    engine.say(prompt)
+    engine.runAndWait()
