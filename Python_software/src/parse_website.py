@@ -15,7 +15,6 @@ def get_headers(container, nav_type):
         for headlines in container.find_all(["h1", "h2", "h3", "h4", "h5" ]):
             result.append(headlines.get_text(strip=True))
 
-
     elif(nav_type == "title"):
         title = container.find_all("title")
         for i in title:
@@ -30,10 +29,10 @@ def get_headers(container, nav_type):
     elif (nav_type == "links"):
         for link in container.find_all('a', href=True):
             temp = link['href']
-            if temp[0:5] == "http":
+            if temp[0:4] == "http":
                 result.append(link['href'])
 
-    print(result)
+
     return result
 
 def describe_hierarchy(container):
@@ -59,7 +58,7 @@ def describe_hierarchy(container):
   
     for link in container.find_all('a', href=True):
         temp = link['href']
-        print(temp[0:4])
+  
         if temp[0:4] == "http":
             links.append(link['href'])
 
@@ -69,6 +68,5 @@ def describe_hierarchy(container):
     result[2] = len(paragraph)
     result[3] = len(links)
 
-    print(result)
 
     return result

@@ -15,6 +15,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from parse_website import*
 from util import *
 from driver import *
+from accessibility import *
 
 
 #----------------------------------
@@ -85,18 +86,27 @@ def track_webbrowser():
 
     while(True):
         try:
+         
             if (driver.current_url !=  current_website):
                 current_website = driver.current_url
-            
+                print(current_website)
+                print(driver.current_url)
                 #----------------------------------
                 #open url connection and read html 
-                uClient = urlopen((str)(current_website))
+                uClient = urlopen(Request((str)(current_website)))
                 page_html = uClient.read()
+
                 uClient.close()
-                
+                print("flag1")
                 #activate html parse tool and parse main body of website
+
+                
+                print(page_html)
+
                 page_soup = soup(page_html, "html.parser")
                 CONTAINER = page_soup
+             
+                
                 NAV_NODE = 0
 
                 result = describe_hierarchy(CONTAINER)
@@ -109,7 +119,8 @@ def track_webbrowser():
                 TITLE_INDEX = 0
                 HEADER_INDEX = 0
                 P_INDEX = 0
-                LINKS_INDEX = 0 
+                LINKS_INDEX = 0
+                time.sleep(1) 
                 navigation()
                 page_navigation_add()
                                     
@@ -296,7 +307,7 @@ def return_prompt():
         print(result[P_INDEX])
         prompt = result[P_INDEX]
     elif NAV_ID == 3:
-        print(result[P_INDEX])
+        print(result[LINKS_INDEX])
         prompt = result[LINKS_INDEX]
 
 
@@ -324,6 +335,7 @@ def on_triggered():
     engine.runAndWait()
     driver_.get("https://www.google.com/")
     #driver_.get("https://en.wikipedia.org/wiki/Arizona_State_University")
+    #driver_.get("https://www.google.com/search?rlz=1C1CHBF_enUS923US923&sxsrf=ALeKk00nkiS_wYEL5mfx8IBVNurG_4g-jg%3A1603763472749&ei=EH2XX-etLdG8-gT7lJ8Y&q=asu+wikipedia&oq=asu+wikipedia&gs_lcp=CgZwc3ktYWIQAzIHCCMQyQMQJzIGCAAQFhAeMgYIABAWEB4yBggAEBYQHjIGCAAQFhAeMgYIABAWEB4yBggAEBYQHjIGCAAQFhAeMgYIABAWEB4yBggAEBYQHjoECCMQJzoHCAAQyQMQQzoECAAQQzoFCAAQsQM6AggAOgoILhDHARCvARBDOggIABCxAxCDAToKCC4QsQMQgwEQQzoHCC4QyQMQQzoFCAAQyQM6CAgAEBYQChAeUPsXWNssYNsyaABwAXgAgAGMAYgBuQmSAQM0LjeYAQCgAQGqAQdnd3Mtd2l6wAEB&sclient=psy-ab&ved=0ahUKEwjn9eLA1NPsAhVRnp4KHXvKBwMQ4dUDCA0&uact=5")
     driver = driver_
     BROWSER_OPEN = True
 
@@ -371,23 +383,19 @@ def navigation():
     
 
 
-def run_accessibility():
+def web_accessibility():
     '''
     run accessibility software
     '''
-
-
+    global NAV_ID
+    global NAV
+    global LINKS_INDEX
     global CONTAINER
 
-    links = get_links(CONTAINER)
-
-    print(links)
-
-def web_accessibility():
-    '''
-    run web accessibility
-    '''
-
-    prompt = " link 1 Medium link 2 Medium link 3 Medium link 4 Medium Link 5 Medium"
-    engine.say(prompt)
-    engine.runAndWait()
+    if (NAV[NAV_ID] == "links"):
+        result = get_headers(CONTAINER, NAV[NAV_ID])
+        link = result[LINKS_INDEX]
+        score = find_accessibility_score(link)
+        engine.say(score)
+        engine.runAndWait()    
+        
