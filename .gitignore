@@ -1,2 +1,6 @@
 venv
-Python_software\src\dist\main
+*.pyc
+*.spec
+build/
+dist/
+*.pyd

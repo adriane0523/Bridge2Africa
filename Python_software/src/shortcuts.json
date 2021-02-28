@@ -1,0 +1,13 @@
+{
+    "readBraille": "shift+z",
+    "activateArduino": "c+up arrow",
+    "navigation": "shift+right arrow",
+    "accessibility": "shift+v",
+    "hierarchy": "shift+left arrow",
+    "indexMinus": "shift+down arrow",
+    "indexPlus": "shift+up arrow",
+    "speak": "shift+space",
+    "brailleQuit": "shift+q",
+    "brailleContiue": "shift+w",
+    "speed": "50"
+}

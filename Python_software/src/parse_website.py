@@ -1,4 +1,3 @@
-from nltk.tokenize import sent_tokenize
 from bs4 import BeautifulSoup as soup
 import re
 
@@ -62,7 +61,6 @@ def describe_hierarchy(container):
         if temp[0:4] == "http":
             links.append(link['href'])
 
-    print(links)
     result[0] = len(title)
     result[1] = len(header)
     result[2] = len(paragraph)

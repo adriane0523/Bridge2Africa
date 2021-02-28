@@ -78,20 +78,70 @@ class WidgetGallery(QDialog):
     def createTopRightGroupBox(self):
         self.topRightGroupBox = QGroupBox("Some sample buttons")
 
-        defaultPushButton = QPushButton("Default Push Button")
-        defaultPushButton.setDefault(True)
+        nameLabel_1 = QLabel(self)
+        nameLabel_1.setText('Read Braille:')
+        line_1 = QLineEdit(self)
+        line_1.setText("test")
 
-        togglePushButton = QPushButton("Toggle Push Button")
-        togglePushButton.setCheckable(True)
-        togglePushButton.setChecked(True)
+        nameLabel_2 = QLabel(self)
+        nameLabel_2.setText('Activate Arduino:')
+        line_2 = QLineEdit(self)
 
-        flatPushButton = QPushButton("Flat Push Button")
-        flatPushButton.setFlat(True)
+        nameLabel_3 = QLabel(self)
+        nameLabel_3.setText('Navgiation:')
+        line_3 = QLineEdit(self)
+
+        nameLabel_4 = QLabel(self)
+        nameLabel_4.setText('Acccessibility:')
+        line_4 = QLineEdit(self)
+        
+        nameLabel_5 = QLabel(self)
+        nameLabel_5.setText('Hierarchy:')
+        line_5 = QLineEdit(self)
+
+        nameLabel_6 = QLabel(self)
+        nameLabel_6.setText('Minus Index:')
+        line_6 = QLineEdit(self)
+
+        nameLabel_7 = QLabel(self)
+        nameLabel_7.setText('Plus Index:')
+        line_7 = QLineEdit(self)
+
+        nameLabel_8 = QLabel(self)
+        nameLabel_8.setText('Speak:')
+        line_8 = QLineEdit(self)
+
+        
+        nameLabel_9 = QLabel(self)
+        nameLabel_9.setText('Braille Read Quit:')
+        line_9 = QLineEdit(self)
+
+
+        nameLabel_10 = QLabel(self)
+        nameLabel_10.setText('Braille Read Contiue:')
+        line_10 = QLineEdit(self)
 
         layout = QVBoxLayout()
-        layout.addWidget(defaultPushButton)
-        layout.addWidget(togglePushButton)
-        layout.addWidget(flatPushButton)
+        layout.addWidget(nameLabel_1)
+        layout.addWidget(line_1)
+        layout.addWidget(nameLabel_2)
+        layout.addWidget(line_2)
+        layout.addWidget(nameLabel_3)
+        layout.addWidget(line_3)
+        layout.addWidget(nameLabel_4)
+        layout.addWidget(line_4)
+        layout.addWidget(nameLabel_5)
+        layout.addWidget(line_5)
+        layout.addWidget(nameLabel_6)
+        layout.addWidget(line_6)
+        layout.addWidget(nameLabel_7)
+        layout.addWidget(line_7)
+        layout.addWidget(nameLabel_8)
+        layout.addWidget(line_8)
+        layout.addWidget(nameLabel_9)
+        layout.addWidget(line_9)
+        layout.addWidget(nameLabel_10)
+        layout.addWidget(line_10)
         layout.addStretch(1)
         self.topRightGroupBox.setLayout(layout)
 
@@ -146,6 +196,8 @@ class WidgetGallery(QDialog):
         layout.addWidget(scrollBar, 4, 0)
         layout.addWidget(dial, 3, 1, 2, 1)
         self.bottomRightGroupBox.setLayout(layout)
+
+    
 
 
 

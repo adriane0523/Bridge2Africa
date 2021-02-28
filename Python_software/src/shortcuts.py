@@ -7,6 +7,7 @@ import time
 import serial
 import sys
 
+
 import selenium
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -39,18 +40,37 @@ driver = None
 ser = None
 cache = []
 engine = None
-
+IS_BROWSER_OPEN=False
 #----------------------------------
 
+def buttons():
+    global ser
+
+    while True:
+        # Serial read section
+        print(ser.readline().decode())
+
+def getBrowserOpen():
+    global IS_BROWSER_OPEN
+
+    return IS_BROWSER_OPEN
+
+def close_driver():
+    global driver
+    global IS_BROWSER_OPEN
+    if(IS_BROWSER_OPEN):
+        driver.close()
 
 def intialize_speech():
     '''
     intialize speech sythensizer
     '''
     global engine
+    shortcut = read_shortcut()
     engine = pyttsx3.init()
     rate = engine.getProperty('rate')
-    engine.setProperty('rate', rate+300)
+    rate_of_speech = (int)(shortcut["speed"]) + rate
+    engine.setProperty('rate', rate_of_speech)
 
 
 def intialize_arduino():
@@ -58,10 +78,8 @@ def intialize_arduino():
     intialize arduino
     '''
     global ser
-    ser = serial.Serial('COM11', 9600)
-    engine.say("Arduino Intialized")
-    engine.runAndWait()
-
+    ser = serial.Serial('COM8', 9600)
+    print("Success")
 
 
 def track_webbrowser():
@@ -76,39 +94,44 @@ def track_webbrowser():
     global HEADER
     global P
     global LINKS
+    global NAV_ID 
 
     global TITLE_INDEX
     global HEADER_INDEX
     global P_INDEX
     global LINKS_INDEX
+    global IS_BROWSER_OPEN
 
     current_website = None
 
     while(True):
         try:
-         
+            windows = driver.window_handles
+            if (len(windows) > 1):
+                driver.switch_to.window(windows[1])
+                driver.close()
+                driver.switch_to.window(windoes[0])
+            if (len(windows) <= 0):
+                #print(IS_BROWSER_OPEN)
+                IS_BROWSER_OPEN = False
+            else:
+                IS_BROWSER_OPEN = True
+
+            #print("opened windows length: ", len(windows))
             if (driver.current_url !=  current_website):
                 current_website = driver.current_url
-                print(current_website)
-                print(driver.current_url)
                 #----------------------------------
                 #open url connection and read html 
+                
                 uClient = urlopen(Request((str)(current_website)))
                 page_html = uClient.read()
-
                 uClient.close()
-                print("flag1")
-                #activate html parse tool and parse main body of website
-
                 
-                print(page_html)
-
+                #activate html parse tool and parse main body of website
                 page_soup = soup(page_html, "html.parser")
                 CONTAINER = page_soup
-             
                 
                 NAV_NODE = 0
-
                 result = describe_hierarchy(CONTAINER)
 
                 TITLE = result[0]
@@ -120,11 +143,10 @@ def track_webbrowser():
                 HEADER_INDEX = 0
                 P_INDEX = 0
                 LINKS_INDEX = 0
-                time.sleep(1) 
+                time.sleep(1)
+                NAV_ID = 0
                 navigation()
-                page_navigation_add()
-                                    
-            
+    
         except:
             pass
 
@@ -202,6 +224,12 @@ def page_navigation_add():
     global P_INDEX 
     global LINKS_INDEX
 
+    global CONTAINER
+    global TITLE
+    global HEADER
+    global P
+    global LINKS
+
     engine.stop()
 
     if NAV_ID == 0:
@@ -238,7 +266,7 @@ def page_navigation_add():
         engine.say("Links" + format(LINKS_INDEX + 1))
         engine.runAndWait()    
         
-        if ( (LINKS_INDEX + 1) == LINKS_INDEX):
+        if ( (LINKS_INDEX + 1) == LINKS):
             LINKS_INDEX = 0
         else:
             LINKS_INDEX += 1
@@ -256,6 +284,10 @@ def hierarchy():
 
     engine.stop()
     result = describe_hierarchy(CONTAINER)
+
+    engine.say("Current website " + driver.current_url)
+    engine.runAndWait()
+    time.sleep(0.2)
     prompt = "There are " + format(TITLE) + " Titles " + "There are " + format(HEADER) + " Headers "  
     prompt+=(" There are " + format(P) + " Paragraphs " + " There are " + format(LINKS) + " Links on this page")
    
@@ -310,17 +342,12 @@ def return_prompt():
         print(result[LINKS_INDEX])
         prompt = result[LINKS_INDEX]
 
-
-
     return prompt
-
-
 
 def on_triggered(): 
     '''
     Intialize driver and open google
     '''
-
     global test
     global driver
     global engine
@@ -334,8 +361,6 @@ def on_triggered():
     engine.say('Current website google.com')
     engine.runAndWait()
     driver_.get("https://www.google.com/")
-    #driver_.get("https://en.wikipedia.org/wiki/Arizona_State_University")
-    #driver_.get("https://www.google.com/search?rlz=1C1CHBF_enUS923US923&sxsrf=ALeKk00nkiS_wYEL5mfx8IBVNurG_4g-jg%3A1603763472749&ei=EH2XX-etLdG8-gT7lJ8Y&q=asu+wikipedia&oq=asu+wikipedia&gs_lcp=CgZwc3ktYWIQAzIHCCMQyQMQJzIGCAAQFhAeMgYIABAWEB4yBggAEBYQHjIGCAAQFhAeMgYIABAWEB4yBggAEBYQHjIGCAAQFhAeMgYIABAWEB4yBggAEBYQHjoECCMQJzoHCAAQyQMQQzoECAAQQzoFCAAQsQM6AggAOgoILhDHARCvARBDOggIABCxAxCDAToKCC4QsQMQgwEQQzoHCC4QyQMQQzoFCAAQyQM6CAgAEBYQChAeUPsXWNssYNsyaABwAXgAgAGMAYgBuQmSAQM0LjeYAQCgAQGqAQdnd3Mtd2l6wAEB&sclient=psy-ab&ved=0ahUKEwjn9eLA1NPsAhVRnp4KHXvKBwMQ4dUDCA0&uact=5")
     driver = driver_
     BROWSER_OPEN = True
 
@@ -345,13 +370,11 @@ def on_triggered_read():
     '''
     Start braille read
     '''
-
     global ser
     global driver
     global CONTAINER_BRAILLE
     global engine
     global cache
-
 
     result = return_prompt()
     result = result.lower()
@@ -370,18 +393,30 @@ def navigation():
     global NAV 
     global engine
     global NAV_NODE
+    
+    global TITLE_INDEX 
+    global HEADER_INDEX 
+    global P_INDEX 
+    global LINKS_INDEX
 
     engine.stop()
-    
+
     NAV_NODE = 0
     if (NAV_ID == len(NAV)-1):
         NAV_ID = 0
     else:
         NAV_ID += 1
     engine.say(NAV[NAV_ID])
-    engine.runAndWait()    
-    
+    engine.runAndWait()
 
+    if (TITLE_INDEX == 0):
+        page_navigation_add()
+    elif (HEADER_INDEX == 0):
+        page_navigation_add()
+    elif (P_INDEX == 0):
+        page_navigation_add()
+    elif (LINKS_INDEX == 0):
+        page_navigation_add()
 
 def web_accessibility():
     '''

@@ -10,6 +10,9 @@ int decoder_pin2 = 11;
 int decoder_pin3 = 12;
 int decoder_pin4 = 13;
 
+const int buttonPin = 2;     // the number of the pushbutton pin
+const int ledPin =  13;      // the number of the LED pin
+
 byte leds = 0;
 byte leds2 = 0;
 char one = 'a';
@@ -17,7 +20,8 @@ char two = 'd';
 char count = one;
 int first = 1;
 
-
+// variables will change:
+int buttonState = 0;         // variable for reading the pushbutton status
 
 void setup() {
   Serial.begin(9600); // set the baud rate
@@ -35,8 +39,22 @@ void setup() {
 
 
 void loop() {
-  
   char inByte = ' ';
+
+    // read the state of the pushbutton value:
+    buttonState = digitalRead(buttonPin);
+    
+    // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
+    if (buttonState == HIGH) {
+      // turn LED on:
+      Serial.println(1, BIN); // send the data back in a new line so that it is not all one long line
+
+      digitalWrite(ledPin, HIGH);
+    } else {
+      // turn LED off:
+      digitalWrite(ledPin, LOW);
+    }
+  
   if(Serial.available()){ // only send data back if data has been sent
     char inByte = Serial.read(); // read the incoming data
     Serial.println(inByte, BIN); // send the data back in a new line so that it is not all one long line

@@ -1,6 +1,7 @@
 import time
 import keyboard
 
+
 def send_data(ser, first, second,cache):
     '''
     Sends data from the website to the Arduino microcontroller
