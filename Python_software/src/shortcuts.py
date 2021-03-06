@@ -45,11 +45,22 @@ IS_BROWSER_OPEN=False
 
 def buttons():
     global ser
+    flag = True
 
     while True:
         # Serial read section
-        print(ser.readline().decode())
+        ser_data = ser.readline()
+        if (ser_data == b'1\r\n' and flag):
+            print('hello speak now1')
+            on_triggered_speak()
+            flag = False
+        elif(ser_data ==  b'2\r\n' and flag):
+            print('hello speak now2')
+            hierarchy()
+            flag = False
 
+        if (ser_data == b'0\r\n'):
+            flag = True
 def getBrowserOpen():
     global IS_BROWSER_OPEN
 
@@ -78,7 +89,7 @@ def intialize_arduino():
     intialize arduino
     '''
     global ser
-    ser = serial.Serial('COM8', 9600)
+    ser = serial.Serial('COM3', 9600)
     print("Success")
 
 

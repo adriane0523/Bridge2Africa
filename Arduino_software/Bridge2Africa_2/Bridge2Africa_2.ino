@@ -25,7 +25,7 @@ int buttonState = 0;         // variable for reading the pushbutton status
 
 void setup() {
   Serial.begin(9600); // set the baud rate
-  Serial.println("Ready"); // print "Ready" 
+  //Serial.println("Ready"); // print "Ready" 
   pinMode(latchPin, OUTPUT);
   pinMode(dataPin, OUTPUT);
   pinMode(clockPin, OUTPUT);
@@ -41,20 +41,8 @@ void setup() {
 void loop() {
   char inByte = ' ';
 
-    // read the state of the pushbutton value:
-    buttonState = digitalRead(buttonPin);
-    
-    // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
-    if (buttonState == HIGH) {
-      // turn LED on:
-      Serial.println(1, BIN); // send the data back in a new line so that it is not all one long line
+  Serial.println(button());
 
-      digitalWrite(ledPin, HIGH);
-    } else {
-      // turn LED off:
-      digitalWrite(ledPin, LOW);
-    }
-  
   if(Serial.available()){ // only send data back if data has been sent
     char inByte = Serial.read(); // read the incoming data
     Serial.println(inByte, BIN); // send the data back in a new line so that it is not all one long line
@@ -117,6 +105,59 @@ void loop() {
 }
 
 
+int button()
+{
+  analogWrite(A2, 255);
+  analogWrite(A4,0);
+ 
+  int sensorValue = analogRead(A0);
+
+  float voltage= sensorValue * (5.0 / 1023.0);
+
+  int buttonvalue = 0;
+ 
+  if ( voltage > 0.3 && voltage <0.35 )
+  {
+    //Serial.println("Button 8");
+    buttonvalue = 8;
+  }
+  else if ( voltage > 0.35 && voltage <0.39 )
+  {
+    //Serial.println("Button 7");
+    buttonvalue = 7;
+  }
+  else if ( voltage > 0.42 && voltage <0.46 )
+  {
+    //Serial.println("Button 6");
+    buttonvalue = 6;
+  }
+  else if ( voltage > 0.52 && voltage <0.56 )
+  {
+    //Serial.println("Button 5");
+    buttonvalue = 5;
+  }
+  else if ( voltage > 0.68 && voltage <0.72 )
+  {
+    //Serial.println("Button 4");
+    buttonvalue = 4;
+  }  
+  else if ( voltage > 0.96 && voltage <1.0 )
+  {
+    //Serial.println("Button 3");
+    buttonvalue = 3;
+  }  
+  else if ( voltage > 1.63 && voltage <1.67 )
+  {
+    //Serial.println("Button 2");
+    buttonvalue = 2;
+  }
+   else if ( voltage > 4 )
+  {
+    //Serial.println("Button 1");
+    buttonvalue = 1;
+  }
+return buttonvalue;
+}
 
 void updateShiftRegister1()
 {
