@@ -16,8 +16,9 @@ instructions for our braille display to understand</p>
 Still under development
 
 <h5>Current Wiring of the Braille Display</h5>
-<img width="468" alt="Picture1" src="https://user-images.githubusercontent.com/38186787/118158801-1d893480-b3d1-11eb-94f9-23d6ec803674.png">
+<img width="661" alt="Picture2" src="https://user-images.githubusercontent.com/38186787/118159538-f7b05f80-b3d1-11eb-82d9-ab7bce0e67af.png">
+
 <h5>Current Software Decomposition</h5>
-<img width="468" alt="Picture2" src="https://user-images.githubusercontent.com/38186787/118158818-21b55200-b3d1-11eb-88df-be349bcdea3a.png">
+<img width="936" alt="Picture1" src="https://user-images.githubusercontent.com/38186787/118159526-f2ebab80-b3d1-11eb-9bea-3c86a2ef7a89.png">
 <h5>Current Housing</h5>
-<img width="468" alt="Picture3" src="https://user-images.githubusercontent.com/38186787/118158819-21b55200-b3d1-11eb-8131-4ceae8f46d0e.png">
+<img width="468" alt="Picture3" src="https://user-images.githubusercontent.com/38186787/118159554-fc751380-b3d1-11eb-980e-d9c8c3a243c8.png">
