@@ -10,6 +10,9 @@ and the braille display. They use the software to browse the internet and press 
 on the screen. This repo also holds the communication software where we have created our own protocol that converts HTML information from the screen into binary
 instructions for our braille display to understand</p>
 
+<h3>Technologies Used: </h3>
+<p>Python, Arduino, HTML, C, circuitry/Logic gates, 3D-modeling</p>
+
 <h3>Link to Design Document: https://docs.google.com/document/d/1ovyGRtFqcLOZ2RKHfSEC2vQF8a79lpYYkmhWrsfVn9o/edit?usp=sharing</h3>
 <h3>Demo: https://www.youtube.com/watch?v=_R-REKt_a0I&ab_channel=AdrianeInocencio </h3>
 <h3>Running the project</h3>
