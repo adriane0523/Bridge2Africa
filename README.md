@@ -12,8 +12,8 @@ instructions for our braille display to understand</p>
 
 <h3>Link to Design Document: https://docs.google.com/document/d/1ovyGRtFqcLOZ2RKHfSEC2vQF8a79lpYYkmhWrsfVn9o/edit?usp=sharing</h3>
 <h3>Demo: https://www.youtube.com/watch?v=_R-REKt_a0I&ab_channel=AdrianeInocencio </h3>
+<h3>Running the project</h3>
 
-<h3> Running the app</
 ```bash
 # Clone this project
 $ git clone https://github.com/adriane0523/Bridge2Africa.git
