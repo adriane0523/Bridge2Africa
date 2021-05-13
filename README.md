@@ -13,6 +13,30 @@ instructions for our braille display to understand</p>
 <h3>Link to Design Document: https://docs.google.com/document/d/1ovyGRtFqcLOZ2RKHfSEC2vQF8a79lpYYkmhWrsfVn9o/edit?usp=sharing</h3>
 <h3>Demo: https://www.youtube.com/watch?v=_R-REKt_a0I&ab_channel=AdrianeInocencio </h3>
 
+<h3> Running the app</
+```bash
+# Clone this project
+$ git clone https://github.com/adriane0523/Bridge2Africa.git
+
+# Access
+$ cd Python_software/src/
+
+
+# create a virutal enviroment to install your dependencies,
+$ python -m venv venv
+
+#activate it you should see (venv)
+$ venv/Scripts/activate
+
+#install dependencies
+$ pip install -r requirements.txt
+
+#run the app
+$ python main.py
+
+#Use arduino ide to lauch the files within Arduino_Software
+```
+
 <h3>Progress so far</h3>
 Still under development
 
