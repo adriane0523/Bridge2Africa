@@ -11,6 +11,7 @@ on the screen. This repo also holds the communication software where we have cre
 instructions for our braille display to understand</p>
 
 <h3>Link to Design Document: https://docs.google.com/document/d/1ovyGRtFqcLOZ2RKHfSEC2vQF8a79lpYYkmhWrsfVn9o/edit?usp=sharing</h3>
+<h3>Demo: https://www.youtube.com/watch?v=_R-REKt_a0I&ab_channel=AdrianeInocencio </h3>
 
 <h3>Progress so far</h3>
 Still under development
