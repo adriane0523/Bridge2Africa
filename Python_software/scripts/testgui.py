@@ -109,11 +109,9 @@ class WidgetGallery(QDialog):
         nameLabel_8.setText('Speak:')
         line_8 = QLineEdit(self)
 
-        
         nameLabel_9 = QLabel(self)
         nameLabel_9.setText('Braille Read Quit:')
         line_9 = QLineEdit(self)
-
 
         nameLabel_10 = QLabel(self)
         nameLabel_10.setText('Braille Read Continue:')
