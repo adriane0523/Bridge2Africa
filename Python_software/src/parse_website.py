@@ -9,7 +9,6 @@ def get_headers(container, nav_type):
     '''
     result = []
     
-
     if (nav_type == "headers"):
         for headlines in container.find_all(["h1", "h2", "h3", "h4", "h5" ]):
             result.append(headlines.get_text(strip=True))
@@ -65,6 +64,5 @@ def describe_hierarchy(container):
     result[1] = len(header)
     result[2] = len(paragraph)
     result[3] = len(links)
-
 
     return result

@@ -7,7 +7,6 @@ import time
 import serial
 import sys
 
-
 import selenium
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -18,9 +17,8 @@ from util import *
 from driver import *
 from accessibility import *
 
-
 #----------------------------------
-#global variables
+# Global variables
 INDEX = 1
 TITLE = 0
 HEADER = 0
@@ -74,7 +72,7 @@ def close_driver():
 
 def intialize_speech():
     '''
-    intialize speech sythensizer
+    Initialize speech synthesizer
     '''
     global engine
     shortcut = read_shortcut()
@@ -95,7 +93,7 @@ def intialize_arduino():
 
 def track_webbrowser():
     '''
-    Keep track of what webpage the use is currently on, if the page is switched then recheck page heirarchy, 
+    Keep track of what webpage the use is currently on, if the page is switched then recheck page hierarchy, 
     reset indexes, and reset CONTAINER html with current page HTML
     '''
 
@@ -121,7 +119,7 @@ def track_webbrowser():
             if (len(windows) > 1):
                 driver.switch_to.window(windows[1])
                 driver.close()
-                driver.switch_to.window(windoes[0])
+                driver.switch_to.window(windows[0]) # Was windoes[0]
             if (len(windows) <= 0):
                 #print(IS_BROWSER_OPEN)
                 IS_BROWSER_OPEN = False
@@ -132,13 +130,13 @@ def track_webbrowser():
             if (driver.current_url !=  current_website):
                 current_website = driver.current_url
                 #----------------------------------
-                #open url connection and read html 
+                # Open url connection and read html 
                 
                 uClient = urlopen(Request((str)(current_website)))
                 page_html = uClient.read()
                 uClient.close()
                 
-                #activate html parse tool and parse main body of website
+                # Activate html parse tool and parse main body of website
                 page_soup = soup(page_html, "html.parser")
                 CONTAINER = page_soup
                 
@@ -163,7 +161,7 @@ def track_webbrowser():
 
 def page_navigation_minus():
     '''
-    decrement index on the coressponding navigation setting
+    Decrement index on the corresponding navigation setting
     '''
     global NAV_ID
     global NAV 
@@ -222,7 +220,7 @@ def page_navigation_minus():
 
 def page_navigation_add():
     '''
-    Incrament index on the corresponding navgation setting
+    Increment index on the corresponding navigation setting
     '''
 
     global NAV_ID
@@ -305,11 +303,9 @@ def hierarchy():
     engine.say(prompt)
     engine.runAndWait()
 
-
-
 def on_triggered_speak():
     '''
-    Voice out the current navigation pointer depending on what index and navgation setting
+    Voice out the current navigation pointer depending on what index and navigation setting
     '''
 
     global CONTAINER
@@ -321,8 +317,6 @@ def on_triggered_speak():
     engine.stop()
     engine.say(prompt)
     engine.runAndWait()
-
-
 
 def return_prompt():
     '''
@@ -357,14 +351,14 @@ def return_prompt():
 
 def on_triggered(): 
     '''
-    Intialize driver and open google
+    Initialize driver and open Google
     '''
     global test
     global driver
     global engine
     global BROWSER_OPEN
 
-    engine.say('Opening new Webrowser')
+    engine.say('Opening new Web Browser')
     engine.runAndWait()
     driver_ = webdriver.Chrome(ChromeDriverManager().install())
     driver_.maximize_window()
@@ -376,7 +370,7 @@ def on_triggered():
     BROWSER_OPEN = True
 
     
-#Start reading the information on the website and send it to the arduino
+#Start reading the information on the website and send it to the Arduino
 def on_triggered_read():
     '''
     Start braille read
@@ -398,7 +392,7 @@ def on_triggered_read():
 
 def navigation():
     '''
-    iterate through the navigation settings
+    Iterate through the navigation settings
     '''
     global NAV_ID
     global NAV 

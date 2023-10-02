@@ -7,7 +7,6 @@ from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateTimeEdit,
         QSlider, QSpinBox, QStyleFactory, QTableWidget, QTabWidget, QTextEdit,
         QVBoxLayout, QWidget)
 
-
 class WidgetGallery(QDialog):
     def __init__(self, parent=None):
         super(WidgetGallery, self).__init__(parent)
@@ -29,7 +28,6 @@ class WidgetGallery(QDialog):
         self.createTopRightGroupBox()
         self.createBottomLeftTabWidget()
         self.createBottomRightGroupBox()
-
 
         mainLayout = QGridLayout()
         mainLayout.addWidget(self.topLeftGroupBox, 1, 0)
@@ -88,11 +86,11 @@ class WidgetGallery(QDialog):
         line_2 = QLineEdit(self)
 
         nameLabel_3 = QLabel(self)
-        nameLabel_3.setText('Navgiation:')
+        nameLabel_3.setText('Navigation:')
         line_3 = QLineEdit(self)
 
         nameLabel_4 = QLabel(self)
-        nameLabel_4.setText('Acccessibility:')
+        nameLabel_4.setText('Accessibility:')
         line_4 = QLineEdit(self)
         
         nameLabel_5 = QLabel(self)
@@ -118,7 +116,7 @@ class WidgetGallery(QDialog):
 
 
         nameLabel_10 = QLabel(self)
-        nameLabel_10.setText('Braille Read Contiue:')
+        nameLabel_10.setText('Braille Read Continue:')
         line_10 = QLineEdit(self)
 
         layout = QVBoxLayout()
@@ -196,10 +194,6 @@ class WidgetGallery(QDialog):
         layout.addWidget(scrollBar, 4, 0)
         layout.addWidget(dial, 3, 1, 2, 1)
         self.bottomRightGroupBox.setLayout(layout)
-
-    
-
-
 
 if __name__ == '__main__':
 
