@@ -47,7 +47,6 @@ class WidgetGallery(QDialog):
         self.createBottomLeftTabWidget()
         self.createBottomRightGroupBox()
 
-
         mainLayout = QGridLayout()
         mainLayout.addWidget(self.topLeftGroupBox, 1, 0)
         mainLayout.addWidget(self.topRightGroupBox, 1, 1)
@@ -80,7 +79,7 @@ class WidgetGallery(QDialog):
         radioButton3 = QRadioButton("Passive Mode: Braille")
         radioButton1.setChecked(True)
 
-        checkBox = QCheckBox("Include Assessibility Rating in Search Results")
+        checkBox = QCheckBox("Include Accessibility Rating in Search Results")
         checkBox.setTristate(True)
         checkBox.setCheckState(Qt.PartiallyChecked)
 
@@ -111,12 +110,12 @@ class WidgetGallery(QDialog):
         self.line_2.setText(shortcut["activateArduino"])
 
         nameLabel_3 = QLabel(self)
-        nameLabel_3.setText('Navgiation:')
+        nameLabel_3.setText('Navigation:')
         self.line_3 = QLineEdit(self)
         self.line_3.setText(shortcut["navigation"])
 
         nameLabel_4 = QLabel(self)
-        nameLabel_4.setText('Acccessibility:')
+        nameLabel_4.setText('Accessibility:')
         self.line_4 = QLineEdit(self)
         self.line_4.setText(shortcut["accessibility"])
 
@@ -204,8 +203,6 @@ class WidgetGallery(QDialog):
         if (getBrowserOpen() == False):
             on_triggered()
 
-
-
     def on_click(self):
         print(self.line_1.text())
 
@@ -226,11 +223,8 @@ class WidgetGallery(QDialog):
         write_json(data)
         self.close()
 
-    # overriding the closeEvent method
+    # Overriding the closeEvent method
     def closeEvent(self, event):
         close_driver()
-        # setting text to the label
+        # Setting text to the label
         print("Close Event Called")
-
-      
-      

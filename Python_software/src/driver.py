@@ -1,7 +1,6 @@
 import time
 import keyboard
 
-
 def send_data(ser, first, second,cache):
     '''
     Sends data from the website to the Arduino microcontroller
@@ -32,7 +31,7 @@ def clear_cache (ser, cache):
 
 def arduino(ser, character):
     '''
-    Encodes character and sends it to the arduino, and reads any inputs from the arduino
+    Encodes character and sends it to the Arduino, and reads any inputs from the Arduino
     accepts serial library and letter/character (not number)
     '''
     #ser.write(str.encode(character) )
@@ -41,7 +40,7 @@ def arduino(ser, character):
 
 def webinfo_to_arduino(ser, engine, text, data, cache):
     '''
-    Goes to each letter references data.json and sends data to arduino,
+    Goes to each letter references data.json and sends data to Arduino,
     '''
     count = 0
     for i in text:
@@ -58,8 +57,8 @@ def webinfo_to_arduino(ser, engine, text, data, cache):
                 time.sleep(1)
 
                 if (count == 9):
-                    flag =True
-                    print("Press x + right arrow to contiue")
+                    flag = True
+                    print("Press x + right arrow to continue")
          
                     while flag:
                         if keyboard.is_pressed('x+right arrow'):
@@ -69,7 +68,7 @@ def webinfo_to_arduino(ser, engine, text, data, cache):
                 else:
                     count = count + 1
 
-        #quit
+        # Quit
         if keyboard.is_pressed('x+down arrow'):  
             engine.say('quitting')
             engine.runAndWait()
